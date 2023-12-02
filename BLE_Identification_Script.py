@@ -127,16 +127,21 @@ print(f"Data: {data_1}")
 # Compare RSSI, Power Level, and Data values and declare if they are from the same device
 if (
     abs(rssi_0 - rssi_1) <= rssi_threshold
-    and data_0 == data_1
-    and power_level_0 is not None
-    and power_level_1 is not None
+    and data_0[:5] == data_1[:5]  # Check if the first 5 characters match
     and (
-        phone_power_level_range[0] <= power_level_0 <= phone_power_level_range[1]
-        or smart_watch_power_level_range[0] <= power_level_0 <= smart_watch_power_level_range[1]
-    )
-    and (
-        phone_power_level_range[0] <= power_level_1 <= phone_power_level_range[1]
-        or smart_watch_power_level_range[0] <= power_level_1 <= smart_watch_power_level_range[1]
+        (power_level_0 is None and power_level_1 is None)  # Check if both power levels are not available
+        or (
+            power_level_0 is not None
+            and power_level_1 is not None
+            and (
+                phone_power_level_range[0] <= power_level_0 <= phone_power_level_range[1]
+                or smart_watch_power_level_range[0] <= power_level_0 <= smart_watch_power_level_range[1]
+            )
+            and (
+                phone_power_level_range[0] <= power_level_1 <= phone_power_level_range[1]
+                or smart_watch_power_level_range[0] <= power_level_1 <= smart_watch_power_level_range[1]
+            )
+        )
     )
 ):
     print("These are the same device.")
